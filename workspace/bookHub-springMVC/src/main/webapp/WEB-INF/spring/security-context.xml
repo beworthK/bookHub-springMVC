@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+		
+		
+	<!-- bcrypt : 패스워드를 저장하는 용도로 설계된 해시 함수 -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<!-- 스프링 시큐리티 시작지점 -->
+	<security:http>
+		<!-- admin -->
+		<security:intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
+		<security:form-login login-page="/admin/Login" /> 
+		<security:logout logout-url="/admin/Logout" invalidate-session="true" delete-cookies="remember-me, JSESSION_ID"/>
+		<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800" /><!-- 604800 = 1주일 -->
+	</security:http>
+	
+	<!-- 
+		스프링 시큐리티에서 인증을 담당하는 인증 매니저 
+		스프링 시큐리티가 동작하기 위해서는 authentication-manager 라는 시작지점이 필요하다.
+		ㄴ 설정 안하면 springSecurityFilterChain 을 찾을 수 없다는 오류가 난다
+	-->
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="customUserDetailsService">
+			<security:password-encoder ref="bcryptPasswordEncoder" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>

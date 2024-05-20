@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Processes application requests -->
+	<!-- 
+		1) 모든 Request 는 Front-Controller 인 DispatcherServlet 을 통해서 처리한다. 
+		   DispatcherServlet을 통해 Request 받는다.
+		2) HandlerMapping 을 통해 해당 Request를 처리하는 컨트롤러를 찾는다. 
+			- HandlerMapping 인터페이스 구현 객체인 RequestMappingHandlerMapping 같은 경우,
+			  @RequestMapping 어노테이션이 적용된 것을 기준으로 판단해서 찾는다.
+		3) 적절한 컨트롤러를 찾으면 HandlerAdapter 를 이용해서 해당 컨트롤러를 동작시킨다.
+		4) 컨트롤러가 반환한 결과를 적절한 view를 통해 처리한다(viewResolver를 통해 적절한 view를 찾음)
+		5) View 에서 실제로 응답보내야 하는 데이터를 Jsp 등을 이용해 생성한다.
+		6) 만들어진 응답(Responce)은 DispatcherServlet 통해 전송한다.
+	-->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+</web-app>
