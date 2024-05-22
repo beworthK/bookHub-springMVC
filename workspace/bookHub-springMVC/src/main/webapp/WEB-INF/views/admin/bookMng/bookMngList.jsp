@@ -24,24 +24,76 @@
             <i class="fas fa-table me-1"></i>
             도서 목록
         </div>
-        <div class="card-body">
-            <div id="bookMngGrid">
+        <div class="card-body d-flex">
+        	<div id="ctgrGrid" class="w-20 me-4">
+        	</div>
+            <div id="bookGrid" class="w-75">
             </div>
         </div>
     </div>
 </div>
 
+
+<script type="text/javascript" src="/resources/js/grid.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	const grid = new tui.Grid({
-		el: document.getElementById('bookMngGrid'),
+	// 분류목록
+	const ctgrGrid = new tui.Grid({
+		el: document.getElementById('ctgrGrid'),
 		scrollX: false,
 	    scrollY: false,
+		columns: [
+			{header: '분류코드', name: 'id', hidden: 1,},
+			{header: '분류', name: 'name'},
+		],
+		treeColumnOptions: {
+			name: 'name'
+		},
+	});
+	
+	// ctgrTreeData
+	var treeData;
+	$.ajax({
+		type: 'post',
+		url: '/ajax/getCtgrTreeList',
+		data: { ctgr_id: '${categoryVO.ctgr_id}'},
+		contentType: "application/json; charset=utf-8",
+		success: function(result, status, xhr){
+			treeData = gridService.getTreeData(result);
+			//console.log(treeData);
+			
+			ctgrGrid.resetData(treeData)
+			ctgrGrid.expandAll();
+		},
+		error: function(xhr, status, err) {
+			if(err){
+				console.log(err);
+			}
+		}
+	});
+	
+	ctgrGrid.on('click', function(ev) {
+        var rowKey = ev.rowKey;
+        var rowData = ctgrGrid.getRow(rowKey);
+        
+        console.log(rowData.id);
+        // 카테고리 값 기준으로 책 목록 가져오기
+    });
+	
+	  
+	// 책 목록 
+	const bookGrid = new tui.Grid({
+		el: document.getElementById('bookGrid'),
+		//scrollX: false,
+	    scrollY: false,
 		columns: [ 
-			{ header: 'No', name: 'no' },
- 			{ header: 'Category', name: '카테고리' },
-			{ header: 'Name', name: '제목'},
+			{ header: 'no', name: 'no' },
+			{ header: 'id', name: 'hide' },
+ 			{ header: '분류', name: 'Category' },
+			{ header: '제목', name: 'title'},
+			{ header: '작가', name: 'author'},
+			{ header: '출판사', name: 'pub_nm'},
 		],
 		
 	});

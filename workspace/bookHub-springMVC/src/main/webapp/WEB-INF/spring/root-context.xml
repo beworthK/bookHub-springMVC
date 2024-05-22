@@ -30,10 +30,19 @@
 		<constructor-arg ref="hikariConfig"></constructor-arg>
 	</bean>
 	
-	<!-- MyBatis -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"></property>
-	</bean>
+	 <!-- MyBatis 설정 파일 로드 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:config/mybatis-config.xml"/>
+        <!-- 매퍼 위치 설정 -->
+        <property name="mapperLocations" value="classpath:com/reese/mapper/*.xml"/>
+    </bean>
+
+    <!-- MyBatis 스캐너 설정 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.reese.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
 	
 	<!-- transaction  -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -41,8 +50,6 @@
 	</bean>
 	<tx:annotation-driven />
 
-	<mybatis-spring:scan base-package="com.reese.mapper"/>	
-	
 	<context:component-scan base-package="com.reese.service"></context:component-scan>
 	
 	

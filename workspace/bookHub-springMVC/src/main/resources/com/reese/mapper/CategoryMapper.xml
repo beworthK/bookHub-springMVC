@@ -2,24 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.reese.mapper.CategoryMapper">
 	
-	<!-- Define tb Column List -->
-	<sql id="listColumn">
-		 genre_no
-		, name
-		, parent_genre
-		, depth
-		, depth_seq
-		, sort_seq
-		, reg_id
-		, reg_dt
-		, mod_userid
-		, mod_dt
-		, del_yn
-		, del_userid
-		, del_dt
-	</sql>
-	
-	<select id="selectCtgrTreeList" resultType="com.reese.domain.CategoryVO">
+
+	<select id="selectCtgrTreeList" resultType="category">
 		WITH RECURSIVE cte 
 		AS (
 			SELECT 
@@ -27,7 +11,7 @@
 				, ctgr_nm
 				, parent_ctgr
 				, ctgr_id AS tree /* cast(genre_no as VARCHAR(200)) as tree */
-				-- , 1 AS level
+				, 1 AS level
 			FROM category
 			WHERE parent_ctgr = '0'
 			UNION ALL
@@ -36,15 +20,49 @@
 			  	, B.ctgr_nm
 			  	, B.parent_ctgr
 			  	, CONCAT(A.tree, '$', B.ctgr_id) as tree
-			  	-- , level + 1 AS level
+			  	, level + 1 AS level
 		  	FROM category B
 			INNER JOIN cte A
 		  	ON B.parent_ctgr = A.ctgr_id
 		)
 		SELECT *
 		FROM cte
+		WHERE parent_ctgr > 0
 		ORDER BY tree
 	</select>
+	
+	<select id="selectCtgrGridList" parameterType="category" resultType="map">
+		WITH RECURSIVE cte 
+		AS (
+			SELECT 
+				ctgr_id 
+				, ctgr_nm
+				, parent_ctgr
+				, ctgr_id AS tree /* cast(genre_no as VARCHAR(200)) as tree */
+				, 1 AS level
+			FROM category
+			WHERE parent_ctgr IS NULL
+			UNION ALL
+			SELECT 
+			  	B.ctgr_id
+			  	, B.ctgr_nm
+			  	, B.parent_ctgr
+			  	, CONCAT(A.tree, '$', B.ctgr_id) as tree
+			  	, level + 1 AS level
+		  	FROM category B
+			INNER JOIN cte A
+		  	ON B.parent_ctgr = A.ctgr_id
+		)
+		SELECT 
+			ctgr_id AS id
+			, ctgr_nm AS name
+			, parent_ctgr AS parent_id
+			, tree
+			, level
+		FROM cte
+		ORDER BY tree
+	</select>
+	
 	
 </mapper>
 

@@ -1,6 +1,7 @@
 package com.reese.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -21,9 +22,15 @@ public class CategoryServiceImpl implements CategoryService {
 	private CategoryMapper categoryMapper;
 	
 	@Override
-	public List<CategoryVO> selectCtgrTreeList() throws Exception{
+	public List<CategoryVO> selectCtgrTreeList(CategoryVO categoryVO) throws Exception{
 		
-		return categoryMapper.selectCtgrTreeList();
+		return categoryMapper.selectCtgrTreeList(categoryVO);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectCtgrGridList(CategoryVO categoryVO) throws Exception {
+		// TODO Auto-generated method stub
+		return categoryMapper.selectCtgrGridList(categoryVO);
 	}
 	
 	
