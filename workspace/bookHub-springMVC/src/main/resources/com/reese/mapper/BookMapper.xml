@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.reese.mapper.BookMapper">
+	
+
+	<!-- inert 문이 실행되고 생성된 PK 값 알아야 하는 경우 <selectKey> 사용 -->
+	<insert id="insertBookSelectKey" parameterType="book">
+		<selectKey keyProperty="book_id" order="BEFORE" resultType="int">
+			SELECT NEXTVAL(seq_book) FROM DUAL
+		</selectKey>
+		INSERT INTO book (
+			book_id
+			, ctgr_id
+			, title
+			, author
+			, pub_nm
+			, pub_dt
+			, attach_no
+			, reg_userId
+			, reg_dt
+		)
+		VALUES (
+			#{book_id}
+			, #{ctgr_id}
+			, #{title}
+			, #{author}
+			, #{pub_nm}
+			, STR_TO_DATE(#{pub_dt}, '%Y-%m-%d')
+			, #{attach_no}
+			, #{reg_userId}
+			, now()
+		)
+	</insert>
+	
+	<update id="updateBook" parameterType="book">
+		UPDATE book
+		SET
+			ctgr_id = #{ctgr_id}
+			, title = #{title}
+			, author = #{author}
+			, pub_nm = #{pub_nm}
+			, pub_dt = #{pub_dt}
+			, attach_no = #{attach_no}
+			, mod_userid = #{mod_userId}
+			, mod_dt = now()
+		WHERE book_id = #{book_id}
+	</update>
+
+	<update id="deleteBook" parameterType="book">
+		UPDATE book
+		SET
+			del_yn = 'Y'
+			, del_userId = #{del_userId}
+			, del_dt = now()
+		WHERE book_id = #{book_id}
+	</update>
+
+</mapper>
+

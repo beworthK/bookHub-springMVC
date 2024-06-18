@@ -13,12 +13,12 @@ public class CategoryVO {
 	private int depth_seq;
 	private int sort_seq;
 	
-	private String reg_id;
+	private String reg_userId;
 	private String reg_dt;
-	private String mod_userid;
+	private String mod_userId;
 	private String mod_dt;
 	private String del_yn;
-	private String del_userid;
+	private String del_userId;
 	private String del_dt;
 	
 	// param

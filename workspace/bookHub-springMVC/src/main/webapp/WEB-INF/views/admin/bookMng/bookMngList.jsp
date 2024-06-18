@@ -21,14 +21,21 @@
     </div>
     <div class="card mb-4">
         <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            도서 목록
+        	<div class="d-inline-block py-lg-1">
+            	<i class="fas fa-table me-1"></i>
+            	도서 목록
+            </div>
+            <div class="btn-wrapper d-inline-block" style="float: right;">
+	        	<button class="btn btn-sm btn-add" id="addBookBtn" type="button"><i class="fa-solid fa-plus"></i>도서 등록</button>
+      		</div>
         </div>
         <div class="card-body d-flex">
-        	<div id="ctgrGrid" class="w-20 me-4">
+        	<div class="w-20 me-4">
+        		<div id="ctgrGrid" ></div>
         	</div>
-            <div id="bookGrid" class="w-75">
-            </div>
+        	<div class="w-75">
+            	<div id="bookGrid"></div>
+        	</div>
         </div>
     </div>
 </div>
@@ -96,6 +103,11 @@ $(document).ready(function(){
 			{ header: '출판사', name: 'pub_nm'},
 		],
 		
+	});
+	
+	/// 도서 등록 페이지 이동
+    $('#addBookBtn').on('click', function(){
+ 		location.href = "/admin/bookMng/bookRegister";
 	});
 	
 	

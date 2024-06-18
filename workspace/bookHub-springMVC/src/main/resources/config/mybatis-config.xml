@@ -9,7 +9,7 @@
     
     <typeAliases>
     	<typeAlias alias="category"  type="com.reese.domain.CategoryVO" />
-    
+    	<typeAlias alias="book"  type="com.reese.domain.BookVO" />
     
     </typeAliases>
     
